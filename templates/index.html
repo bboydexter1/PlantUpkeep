@@ -1,17 +1,18 @@
 {% extends 'layout.html' %}
 
 {%block body%}
-	<div style="margin-top:5px;"></div>
+<div id="main">
+	<div>
 		<h2 >pompa : </h2><a id="pumpStatus">status</a>	
 			<a href="/on" class="btn btn-info" role="button">on</a>
 			<a href="/off" class="btn btn-info" role="button">off</a>
+		<div ><a>ostatnie podlanie : 		</a> <a id="lastPumpUse">status</a>	</div>
 	</div>
-	<div style="margin-top:5px;"></div>
+	<div>
 		<h2 >lampa : </h2> <a id="lampStatus">status</a>		
 			<a href="/on" class="btn btn-info" role="button">on</a>
 			<a href="/off" class="btn btn-info" role="button">off</a>
-	</div>
-
-	<div ><a>ostatnie podlanie : 		</a> <a id="lastPumpUse">status</a>	</div>
-	<div ><a>ostatnie nasłonecznianie : </a> <a id="LastLampUse">status</a>	</div>
+		<div ><a>ostatnie nasłonecznianie : </a> <a id="LastLampUse">status</a>	</div>
+	</div>	
+</div>
 {% endblock %}

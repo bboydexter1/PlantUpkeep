@@ -1,17 +1,34 @@
 {% extends 'layout.html' %}
 
 {%block body%}
-	<div style="margin-top:5px;"></div>
-		<h2 >pompa : </h2><a id="pumpStatus">status</a>	
-			<a href="/on" class="btn btn-info" role="button">on</a>
-			<a href="/off" class="btn btn-info" role="button">off</a>
-	</div>
-	<div style="margin-top:5px;"></div>
-		<h2 >lampa : </h2> <a id="lampStatus">status</a>		
-			<a href="/on" class="btn btn-info" role="button">on</a>
-			<a href="/off" class="btn btn-info" role="button">off</a>
-	</div>
-
-	<div ><a>ostatnie podlanie : 		</a> <a id="lastPumpUse">status</a>	</div>
-	<div ><a>ostatnie nasłonecznianie : </a> <a id="LastLampUse">status</a>	</div>
+	<form>
+		<div>
+			<div>
+				<div>
+					<a>dni nawadniania : </a>			
+					<input type="checkbox" name="wateringDays" value="pn"> pn
+					<input type="checkbox" name="wateringDays" value="qt"> wt
+					<input type="checkbox" name="wateringDays" value="sr"> sr
+					<input type="checkbox" name="wateringDays" value="cz"> cz
+					<input type="checkbox" name="wateringDays" value="pt"> pt
+					<input type="checkbox" name="wateringDays" value="sb"> sb
+					<input type="checkbox" name="wateringDays" value="nd"> nd			
+				</div>
+				<div>
+					<a>co ile dni nawadniać : </a>
+					<input type="text" name="daysCount">
+				</div>
+			</div>
+		</div>
+		<div>
+			<a>wartość minimalna wilgoci : </a> <input type="text" name="minHumility">
+			<a>wartość porządana wilgoci : </a> <input type="text" name="goodHumility">
+			<a>wartość maksymalna wilgoci : </a> <input type="text" name="maksHumility">
+		</div>
+		<div>
+			<input type="submit" value="Zastosuj">
+		</div>
+		</div>
+	</form>
+	
 {% endblock %}
