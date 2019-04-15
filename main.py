@@ -20,22 +20,33 @@ class PlantPreset(db.Model):
     __tablename__ = 'plantPreset'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(20), unique=True, nullable=False)
-    lampFrom = db.Column(db.Time, unique=True, nullable=False)
-    lampTo = db.Column(db.Time, unique=True, nullable=False)
+    lampFrom = db.Column(db.Time, nullable=True)
+    lampTo = db.Column(db.Time, nullable=True)
     brightnessID = db.Column(db.Integer, db.ForeignKey('brightness.id'), nullable=True)
     humidityID = db.Column(db.Integer, db.ForeignKey('humidity.id'), nullable=True)
-
-class Brightness():
+    
+    def __repr__(self):
+        return "PlantPreset('{self.name}')"
+        
+class Brightness(db.Model):
     __tablename__ = 'brightness'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(20), unique=True, nullable=False)
     brightness = db.Column(db.Integer, nullable=False)
+    preset = db.relationship("PlantPreset")
     
-class Humidity():
+    def __repr__(self):
+        return "Brightness('{self.name}')"
+    
+class Humidity(db.Model):
     __tablename__ = 'humidity'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(20), unique=True, nullable=False)
     soilHumidity = db.Column(db.Integer, nullable=False)
+    preset = db.relationship("PlantPreset")
+    
+    def __repr__(self):
+        return "Humidity('{self.name}')"
 
 @app.route('/')
 def index():
