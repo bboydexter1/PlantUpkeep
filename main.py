@@ -16,6 +16,16 @@ db = SQLAlchemy(app)
 
 temp = False
 
+class CurrentPlant(db.Model):
+    __tablename__ = 'currentPlant'
+    id = db.Column(db.Integer, primary_key=True)
+    LastWatering = db.Column(db.DateTime, nullable=True)
+    LastIrradiation = db.Column(db.DateTime, nullable=True)
+    plantPreset = db.Column(db.Integer, db.ForeignKey('plantPreset.id'), nullable=False)
+    
+    def __repr__(self):
+        return "PlantPreset('{self.plantPreset}' , '{self.LastWatering}' , '{self.LastIrradiation}')"
+    
 class PlantPreset(db.Model):
     __tablename__ = 'plantPreset'
     id = db.Column(db.Integer, primary_key=True)
@@ -33,7 +43,7 @@ class Brightness(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(20), unique=True, nullable=False)
     brightness = db.Column(db.Integer, nullable=False)
-    preset = db.relationship("PlantPreset")
+    #preset = db.relationship("PlantPreset")
     
     def __repr__(self):
         return "Brightness('{self.name}')"
@@ -43,7 +53,7 @@ class Humidity(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(20), unique=True, nullable=False)
     soilHumidity = db.Column(db.Integer, nullable=False)
-    preset = db.relationship("PlantPreset")
+    #preset = db.relationship("PlantPreset")
     
     def __repr__(self):
         return "Humidity('{self.name}')"
