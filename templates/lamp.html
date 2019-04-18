@@ -8,7 +8,9 @@
 			<a>do</a> <input type="text" name="to">
 		</div>
 		<div>
-			<a>wartość nasłonecznienia : </a> <input type="text" name="lightValue">
+			{% for option in options %}
+			<input type="checkbox" class="radio" value="{{option.id}}"> {{option.name}}	
+			{%endfor%}
 		</div>
 		<div>
 			<button>zastosuj</button>

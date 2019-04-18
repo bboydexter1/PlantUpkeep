@@ -23,9 +23,6 @@ class CurrentPlant(db.Model):
     LastIrradiation = db.Column(db.DateTime, nullable=True)
     plantPreset = db.Column(db.Integer, db.ForeignKey('plantPreset.id'), nullable=False)
     
-    def __repr__(self):
-        return "PlantPreset('{self.plantPreset}' , '{self.LastWatering}' , '{self.LastIrradiation}')"
-    
 class PlantPreset(db.Model):
     __tablename__ = 'plantPreset'
     id = db.Column(db.Integer, primary_key=True)
@@ -35,8 +32,6 @@ class PlantPreset(db.Model):
     brightnessID = db.Column(db.Integer, db.ForeignKey('brightness.id'), nullable=True)
     humidityID = db.Column(db.Integer, db.ForeignKey('humidity.id'), nullable=True)
     
-    def __repr__(self):
-        return "PlantPreset('{self.name}')"
         
 class Brightness(db.Model):
     __tablename__ = 'brightness'
@@ -45,8 +40,6 @@ class Brightness(db.Model):
     brightness = db.Column(db.Integer, nullable=False)
     #preset = db.relationship("PlantPreset")
     
-    def __repr__(self):
-        return "Brightness('{self.name}')"
     
 class Humidity(db.Model):
     __tablename__ = 'humidity'
@@ -55,22 +48,24 @@ class Humidity(db.Model):
     soilHumidity = db.Column(db.Integer, nullable=False)
     #preset = db.relationship("PlantPreset")
     
-    def __repr__(self):
-        return "Humidity('{self.name}')"
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    state = GPIO.input(8)
+    CP = CurrentPlant.query.first()
+    return render_template('index.html' , pumpStatus = state , lastWatering=CP.LastWatering , lampStatus=False , lastIrradiation = CP.LastIrradiation)
 
 @app.route('/lamp')
 def lamp():
     GPIO.output(8, True)
-    return render_template('lamp.html')
+    brightnessOptions = Brightness.query.all()
+    return render_template('lamp.html' ,  options = brightnessOptions)
 
 @app.route('/pump')
 def pump():
     GPIO.output(8, False)
-    return render_template('pump.html')
+    humidityOptions = Humidity.query.all()
+    return render_template('pump.html' , options = humidityOptions )
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port= 8080 , debug = True)

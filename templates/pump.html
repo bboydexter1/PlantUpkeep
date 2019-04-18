@@ -9,9 +9,9 @@
 			</div>
 		</div>
 		<div>
-			<a>wartość minimalna wilgoci : </a> <input type="text" name="minHumility">
-			<a>wartość porządana wilgoci : </a> <input type="text" name="goodHumility">
-			<a>wartość maksymalna wilgoci : </a> <input type="text" name="maksHumility">
+			{% for option in options %}
+			<input type="checkbox" class="radio" value="{{option.id}}"> {{option.name}}	
+			{%endfor%}
 		</div>
 		<div>
 			<input type="submit" value="Zastosuj">
