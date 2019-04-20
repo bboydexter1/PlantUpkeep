@@ -21,7 +21,6 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
 
 db = SQLAlchemy(app)
 
-temp = False
 
 class CurrentPlant(db.Model):
     __tablename__ = 'currentPlant'
@@ -69,6 +68,11 @@ def pump():
     GPIO.output(8, False)
     humidityOptions = Humidity.query.all()
     return render_template('pump.html' , options = humidityOptions )
+    
+def refreshPlantSettings():
+    plant = CurrentPlant.query.first()
+    plantHumidity = plant.humidityID.soilHumidity
+    plantBrightness = plant.brightnessID.brightness
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port= 8080 , debug = True)
