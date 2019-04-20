@@ -3,10 +3,17 @@ from flask import Flask, render_template
 from flask_sqlalchemy import SQLAlchemy
 import RPi.GPIO as GPIO
 
+#GPIO 8 = lampka testowa
+#GPIO 11 = sensor wilgoci
+#GPIO 13 = lampa oswietlajaca
+
 GPIO.setmode(GPIO.BOARD)
 GPIO.setwarnings(False)
 GPIO.setup(8, GPIO.OUT)
 GPIO.output(8, False)
+GPIO.setup(11, GPIO.IN)
+GPIO.setup(13, GPIO.OUT)
+GPIO.output(13, False)
 
 app = Flask(__name__)
 
@@ -38,16 +45,12 @@ class Brightness(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(20), unique=True, nullable=False)
     brightness = db.Column(db.Integer, nullable=False)
-    #preset = db.relationship("PlantPreset")
-    
     
 class Humidity(db.Model):
     __tablename__ = 'humidity'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(20), unique=True, nullable=False)
     soilHumidity = db.Column(db.Integer, nullable=False)
-    #preset = db.relationship("PlantPreset")
-    
 
 @app.route('/')
 def index():
