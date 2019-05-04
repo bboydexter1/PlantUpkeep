@@ -1,10 +1,8 @@
 #!/usr/bin/env python
-from flask import Flask, render_template, redirect, url_for, request, flash, session
-#from flask.ext.session import Session
+from flask import Flask, render_template, redirect, url_for, request
 from flask_sqlalchemy import SQLAlchemy
 import RPi.GPIO as GPIO
 from datetime import datetime , time
-#from classes import CurrentPlant, PlantPreset, Brightness, Humidity
 
 #GPIO 8 = lampka testowa
 #GPIO 11 = sensor wilgoci
@@ -29,6 +27,7 @@ app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
 
 db = SQLAlchemy(app)
+
 
 class CurrentPlant(db.Model):
     __tablename__ = 'currentPlant'
@@ -64,30 +63,30 @@ class Humidity(db.Model):
 def index():
     state = GPIO.input(8)
     CP = CurrentPlant.query.first()
-    return render_template('index.html' , pumpStatus = state , lastWatering=CP.LastWatering , lampStatus=0 , lastIrradiation = CP.LastIrradiation)
+    return render_template('index.html' , pumpStatus = state , lastWatering=CP.LastWatering , lampStatus=False , lastIrradiation = CP.LastIrradiation)
 
-@app.route('/addPreset', methods=['GET', 'POST'])
+@app.route('/addPreset')
 def addPreset():
     GPIO.output(8, False)
     humidityOptions = Humidity.query.all()
     brightnessOptions = Brightness.query.all()
     return render_template('addPreset.html' , wateringOptions = humidityOptions , lightOptions = brightnessOptions )
 
-@app.route('/addPresetDataHandle', methods=['GET', 'POST'])
+@app.route('/addPresetDataHandle' ,  methods=['GET', 'POST'])
 def addPresetDataHandle():
     if request.method == 'POST':
         name = request.form['name']
-        lampFrom = request.form['from'].split(":")
-        lampTo = request.form['to'].split(":")
-        lampFrom = time(hour=int(lampFrom[0]), minute = int(lampFrom[1]))
-        lampTo = time(hour=int(lampTo[0]), minute = int(lampTo[1]))
+        lampFrom = request.form['from'].split(";")
+        lampTo = request.form['to'].split(";")
+        lampFrom = time(hour=lampFrom[0], minutes = lampFrom[1])
+        lampTo = time(hour=lampTo[0], minutes = lampTo[1])
         wateringDays = request.form['daysCount']
         brightnessID = request.form['ilumnatingType']
         humidityID = request.form['wateringType']
-        newPlant = PlantPreset(name = name,lampFrom = lampFrom , lampTo = lampTo , wateringDays = wateringDays , brightnessID = brightnessID , humidityID = humidityID)
+        newPlant = PlantPreset(name = name,lampTo = lampFrom , lampTo = lampTo , wateringDays = wateringDays , brightnessID = brightnessID , humidityID = humidityID)
         db.session.add(newPlant)
         db.session.commit()
-        return redirect(url_for('index'))
+        return redirect(url_for(''))
     else:
         return redirect(url_for('addPreset'))
 
@@ -96,32 +95,30 @@ def changePlantSettings():
     plantSettings = PlantPreset.query.all()
     return render_template('chosePreset.html' , options = plantSettings )
 
-@app.route('/changePlantSettingsHandler')
-def changePlantSettingsHandler():
-    plant = CurrentPlant.query.first()
-    plant.plantPreset = 1
-    session.commit()
-    return redirect(url_for('index'))
-
-@app.route('/test',methods = ["POST"])
-def test():
-    flash("flash test")
-    return render_template('test.html')
-
-@app.route('/testHandler', methods=['GET', 'POST'])
-def testHandler():
+@app.route('/sendNewLampOptionsToDB',methods = ['POST'])
+def sendNewLampOptionsToDB():
     if request.method == 'POST':
-        error = None
-        return redirect(url_for('test'))
-        #try:
-        #   flash(request.form['testText'])
-        #   return render_template('testout.html' , error = error )
+        fromTime = request.form['from']
+        toTime = request.form['from']
+        ilumnatingID = request.form['ilumnatingID']
+        newPlant = PlantPreset(lampFrom = fromTime,lampTo = toTime , brightnessID = ilumnatingID)
+        db.add(newPlant)
+        db.commit()
+        return redirect(url_for(''))
     else:
-        return redirect(url_for('test'))
+        return redirect(url_for('lamp'))
+
+@app.route('/sendNewPumpOptionsToDB',methods = ['POST'])
+def sendNewPumpOptionsToDB():
+    if request.method == 'POST':
+        wateringType = request.form['wateringType']
+        daysCount = request.form['daysCount']
+        newPlant = PlantPreset(wateringDays = daysCount,humidityID = wateringType )
+        db.add(newPlant)
+        db.commit()
+        return redirect(url_for(''))
+    else:
+        return redirect(url_for('pump'))
 
 if __name__ == '__main__':
-    app.secret_key = 'super secret key'
-    #app.config['SESSION_TYPE'] = 'filesystem'
-    #sess = Session()
-    #sess.init_app(app)
     app.run(host='0.0.0.0', port= 8080 , debug = True)
