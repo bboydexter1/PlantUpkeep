@@ -6,7 +6,7 @@
 		{% for option in options %}
 		<div class="box">
 		<input type="radio" class="radio" name="preset" value="{{option.id}}"> {{option.name}}
-		<p>nasłonecznianie : od {{option.name}} do {{option.name}} </p>
+		<p>nasłonecznianie : od {{option.lampFrom}} do {{option.lampTo}} </p>
 		<p>siła nasłonecznienia : {{option.brightnessID}} </p>	
 		<p>nawadnianie co {{option.wateringDays}} dni </p>		
 		<p>stopień nawodnienia : {{option.humidityID}} </p>			

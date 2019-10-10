@@ -10,19 +10,18 @@
 		</div>
 		<div>
 			{% for option in wateringOptions %}
-			<input type="checkbox" class="radio" name="wateringType" value="{{option.id}}"> {{option.name}}	
+			<input type="radio" class="radio" name="wateringType" value="{{option.id}}"> {{option.name}}	
 			{%endfor%}
-		</div>
 		</div>
 
 		<div>
 			<a>godziny nasłoneczniania : </a>
-			<a>od</a> <input type="text" name="from">
-			<a>do</a> <input type="text" name="to">
+			<a>od</a> <input type="time" name="from">
+			<a>do</a> <input type="time" name="to">
 		</div>
 		<div>
 			{% for option in lightOptions %}
-			<input type="checkbox" class="radio" name="ilumnatingType" value="{{option.id}}"> {{option.name}}	
+			<input type="radio" class="radio" name="ilumnatingType" value="{{option.id}}"> {{option.name}}	
 			{%endfor%}
 		</div>
 		<div>
