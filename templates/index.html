@@ -8,7 +8,7 @@
 			<a href="/on" class="btn btn-info" role="button">on</a>
 			<a href="/off" class="btn btn-info" role="button">off</a>
 		</div>
-		<div ><p>ostatnie podlanie : 		</p> <a id="lastPumpUse">{{lastWatering}}</a>	</div>
+		<div ><a>ostatnie podlanie : 		</a> <a id="lastPumpUse">{{lastWatering}}</a>	</div>
 	</div>
 	<div>
 		<h2 >lampa : </h2> <a id="lampStatus">{{lampStatus}}</a>
@@ -16,7 +16,8 @@
 			<a href="/on" class="btn btn-info" role="button">on</a>
 			<a href="/off" class="btn btn-info" role="button">off</a>
 		</div>
-		<div ><p>ostatnie nasłonecznianie : </p> <a id="LastLampUse">{{lastIrradiation}}</a>	</div>
+		<div ><a>ostatnie nasłonecznianie : </a> <a id="LastLampUse">{{lastIrradiation}}</a>	</div>
 	</div>	
+	<p>aktualne ustawienie : {{presetName}}</p>
 </div>
 {% endblock %}

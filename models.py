@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 from flask import Flask, render_template, redirect, url_for, request
 from flask_sqlalchemy import SQLAlchemy
-import RPi.GPIO as GPIO
 from datetime import datetime , time
-from classes import CurrentPlant, PlantPreset,Brightness,Humidity
 import sched, time
+
+app = Flask(__name__)
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
 

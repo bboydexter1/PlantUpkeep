@@ -5,7 +5,7 @@
 	<form action="{{ url_for('changePlantSettingsHandler') }}" method="post">
 		{% for option in options %}
 		<div class="box">
-		<input type="checkbox" class="radio" name="preset" value="{{option.id}}"> {{option.name}}
+		<input type="radio" class="radio" name="preset" value="{{option.id}}"> {{option.name}}
 		<p>nasłonecznianie : od {{option.name}} do {{option.name}} </p>
 		<p>siła nasłonecznienia : {{option.brightnessID}} </p>	
 		<p>nawadnianie co {{option.wateringDays}} dni </p>		
