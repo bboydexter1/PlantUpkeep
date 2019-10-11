@@ -13,7 +13,7 @@ def index():
     lampState = Raspi.checkPin(16)
     currentPreset = Models.CurrentPlant.query.first()
     presetDetails = Models.PlantPreset.query.filter_by(id=currentPreset.plantPreset).first()
-    return render_template('index.html' , pumpStatus = state , lastWatering=currentPreset.LastWatering , lampStatus=lampState , lastIrradiation = currentPreset.LastIrradiation, presetName = presetDetails.name)
+    return render_template('index.html' , pumpStatus = pumpState , lastWatering=currentPreset.LastWatering , lampStatus=lampState , lastIrradiation = currentPreset.LastIrradiation, presetName = presetDetails.name)
 
 @Models.app.route('/addPreset', methods=['GET', 'POST'])
 def addPreset():
