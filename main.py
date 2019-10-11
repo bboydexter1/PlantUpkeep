@@ -1,38 +1,23 @@
 #!/usr/bin/env python
 from flask import Flask, render_template, redirect, url_for, request, flash, session
 from flask_sqlalchemy import SQLAlchemy
-import RPi.GPIO as GPIO
 from datetime import datetime , time
 import models as Models
+import GPIOFuntions as Raspi
 
-#GPIO 8 = lampka testowa
-#GPIO 11 = sensor wilgoci
-#GPIO 13 = lampa lewa
-#GPIO 15 = lampa prawa
-#GPIO 16 = wlacznik pompy
-
-GPIO.setmode(GPIO.BOARD)
-GPIO.setwarnings(False)
-GPIO.setup(8, GPIO.OUT)
-GPIO.output(8, False)
-GPIO.setup(11, GPIO.IN)
-GPIO.setup(13, GPIO.OUT)
-GPIO.output(13, False)
-GPIO.setup(15, GPIO.OUT)
-GPIO.output(15, False)
-GPIO.setup(16, GPIO.OUT)
-GPIO.output(16, False)
+Raspi.setupPins()
 
 @Models.app.route('/')
 def index():
-    state = GPIO.input(8)
+    pumpState = Raspi.checkPin(8)
+    lampState = Raspi.checkPin(16)
     currentPreset = Models.CurrentPlant.query.first()
     presetDetails = Models.PlantPreset.query.filter_by(id=currentPreset.plantPreset).first()
-    return render_template('index.html' , pumpStatus = state , lastWatering=currentPreset.LastWatering , lampStatus=0 , lastIrradiation = currentPreset.LastIrradiation, presetName = presetDetails.name)
+    return render_template('index.html' , pumpStatus = state , lastWatering=currentPreset.LastWatering , lampStatus=lampState , lastIrradiation = currentPreset.LastIrradiation, presetName = presetDetails.name)
 
 @Models.app.route('/addPreset', methods=['GET', 'POST'])
 def addPreset():
-    GPIO.output(8, False)
+    Raspi.turnOffPin(8)
     humidityOptions = Models.Humidity.query.all()
     brightnessOptions = Models.Brightness.query.all()
     return render_template('addPreset.html' , wateringOptions = humidityOptions , lightOptions = brightnessOptions )
@@ -69,11 +54,6 @@ def changePlantSettingsHandler():
         return redirect(url_for('index'))
     else:
         return redirect(url_for('changePlantSettings'))
-
-@Models.app.route('/test',methods = ["POST"])
-def test():
-    flash("flash test")
-    return render_template('test.html')
 
 if __name__ == '__main__':
     Models.app.secret_key = 'super secret key'
