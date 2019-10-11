@@ -23,17 +23,24 @@ def sheduleLamp():
     schedule.every(5).minutes.do(Raspi.ilumantion).tag('lamp')
 
 def cancelSheduleLamp():
-    
+    Raspi.turnOffPin(Raspi.RaspiPin.ORightLamp)
+    Raspi.turnOffPin(Raspi.RaspiPin.OLeftLamp)
     schedule.clear('lamp')
 
 def setupPump():
-    raise Exception("not implemented")
+    currentPreset = Models.CurrentPlant.query.first()
+    presetDetails = Models.PlantPreset.query.filter_by(id=currentPreset.plantPreset).first()
+    startTime = presetDetails.lampFrom
+    stopTime = presetDetails.lampTo
+    schedule.every(presetDetails.wateringDays).day.at("15:00").do(shedulePump)
+    schedule.every(presetDetails.wateringDays).day.at("15:15").do(cancelShedulePump)
 
 def shedulePump():
-    raise Exception("not implemented")
+    schedule.every(10).secounds.do(Raspi.watering).tag('pump')
 
 def cancelShedulePump():
-    raise Exception("not implemented")
+    Raspi.turnOffPin(Raspi.RaspiPin.OPump)
+    schedule.clear('pump')
 
 while 1:
     Sched.run_pending()

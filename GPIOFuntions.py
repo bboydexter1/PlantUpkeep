@@ -30,15 +30,14 @@ class RaspiPin(Enum):
 def setupPins():
     GPIO.setmode(GPIO.BOARD)
     GPIO.setwarnings(False)
-    GPIO.setup(RaspiPin.OTestLamp, GPIO.OUT)
-    GPIO.output(RaspiPin.OTestLamp, False)
-    #GPIO.setup(11, GPIO.IN)
-    GPIO.setup(RaspiPin.OLeftLamp, GPIO.OUT)
-    GPIO.output(RaspiPin.OLeftLamp, False)
-    GPIO.setup(RaspiPin.ORightLamp, GPIO.OUT)
-    GPIO.output(RaspiPin.ORightLamp, False)
-    GPIO.setup(RaspiPin.OPump, GPIO.OUT)
-    GPIO.output(RaspiPin.OPump, False)
+    GPIO.setup(RaspiPin.OTestLamp.value, GPIO.OUT)
+    GPIO.output(RaspiPin.OTestLamp.value, False)
+    GPIO.setup(RaspiPin.OLeftLamp.value, GPIO.OUT)
+    GPIO.output(RaspiPin.OLeftLamp.value, False)
+    GPIO.setup(RaspiPin.ORightLamp.value, GPIO.OUT)
+    GPIO.output(RaspiPin.ORightLamp.value, False)
+    GPIO.setup(RaspiPin.OPump.value, GPIO.OUT)
+    GPIO.output(RaspiPin.OPump.value, False)
 
 def checkPin(pin):
     return GPIO.input(pin)
@@ -58,21 +57,21 @@ def getLightLevel():
 def watering():
     targetHumidity = 512 # change to get this from models
     if (getHumidityLevel() < targetHumidity):
-        GPIO.output(RaspiPin.OPump, True)
+        GPIO.output(RaspiPin.OPump.value, True)
         return True
     else :
-        GPIO.output(RaspiPin.OPump, False)
+        GPIO.output(RaspiPin.OPump.value, False)
         return False
 
 def ilumantion(pin):
     targetLightLevel = 256 # change to get this from models
     if (getLightLevel() < targetLightLevel):
-        GPIO.output(RaspiPin.OLeftLamp, True)
-        GPIO.output(RaspiPin.ORightLamp, True)
+        GPIO.output(RaspiPin.OLeftLamp.value, True)
+        GPIO.output(RaspiPin.ORightLamp.value, True)
         return True
     else :
-        GPIO.output(RaspiPin.OLeftLamp, False)
-        GPIO.output(RaspiPin.ORightLamp, False)
+        GPIO.output(RaspiPin.OLeftLamp.value, False)
+        GPIO.output(RaspiPin.ORightLamp.value, False)
         return False
 
 
