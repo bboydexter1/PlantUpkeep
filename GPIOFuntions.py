@@ -55,7 +55,10 @@ def getLightLevel():
     return ((mcp.read_adc(0)+mcp.read_adc(1))/2)
 
 def watering():
-    targetHumidity = 512 # change to get this from models
+    currentPreset = Models.CurrentPlant.query.first()
+    presetDetails = Models.PlantPreset.query.filter_by(id=currentPreset.plantPreset).first()
+    humidityDetails = Models.Humidity.filter_by(id=presetDetails.humidityID).first()
+    targetHumidity = humidityDetails.soilHumidity
     if (getHumidityLevel() < targetHumidity):
         GPIO.output(RaspiPin.OPump.value, True)
         return True
@@ -64,7 +67,10 @@ def watering():
         return False
 
 def ilumantion(pin):
-    targetLightLevel = 256 # change to get this from models
+    currentPreset = Models.CurrentPlant.query.first()
+    presetDetails = Models.PlantPreset.query.filter_by(id=currentPreset.plantPreset).first()
+    iluminationDetails = Models.Brightness.filter_by(id=presetDetails.brightnessID).first()
+    targetLightLevel = iluminationDetails.brightness
     if (getLightLevel() < targetLightLevel):
         GPIO.output(RaspiPin.OLeftLamp.value, True)
         GPIO.output(RaspiPin.ORightLamp.value, True)

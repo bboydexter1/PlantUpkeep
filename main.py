@@ -4,6 +4,7 @@ from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime , time
 import models as Models
 import GPIOFuntions as Raspi
+import loop as Loop
 
 Raspi.setupPins()
 
@@ -56,5 +57,6 @@ def changePlantSettingsHandler():
         return redirect(url_for('changePlantSettings'))
 
 if __name__ == '__main__':
+    Loop.setup()
     Models.app.secret_key = 'super secret key'
     Models.app.run(host='0.0.0.0', port= 8080 , debug = True)
