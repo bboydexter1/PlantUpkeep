@@ -14,6 +14,7 @@ def setup():
     loopEndFlag = True
     setupLamp()
     setupPump()
+    schedule.every().minutes.do(turnOffSystem)
     runThreaded(mainLoop)
 
 def turnOffSystem():
@@ -21,6 +22,9 @@ def turnOffSystem():
     loopEndFlag = True
 
 def runThreaded(job_func):
+    global loopEndFlag
+    loopEndFlag = False
+    time.sleep(1)
     jobThread = threading.Thread(target=job_func)
     jobThread.start()
 
@@ -38,6 +42,9 @@ def sheduleLamp():
 def cancelSheduleLamp():
     Raspi.turnOffPin(Raspi.RaspiPin.ORightLamp)
     Raspi.turnOffPin(Raspi.RaspiPin.OLeftLamp)
+    currentPreset = Models.CurrentPlant.query.first()
+    currentPreset.LastIrradiation = datetime.now()
+    Models.db.session.commit()
     schedule.clear('lamp')
 
 def setupPump():
@@ -53,10 +60,13 @@ def shedulePump():
 
 def cancelShedulePump():
     Raspi.turnOffPin(Raspi.RaspiPin.OPump)
+    currentPreset = Models.CurrentPlant.query.first()
+    currentPreset.LastWatering = datetime.now()
+    Models.db.session.commit()
     schedule.clear('pump')
 
 def mainLoop():
     global loopEndFlag
     while loopEndFlag == False:
         schedule.run_pending()
-    loopEndFlag = False
+        time.sleep(1)
