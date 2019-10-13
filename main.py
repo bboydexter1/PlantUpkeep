@@ -56,6 +56,16 @@ def changePlantSettingsHandler():
     else:
         return redirect(url_for('changePlantSettings'))
 
+@Models.app.route('/off')
+def turnOffSystem():
+    Loop.turnOffSystem()
+    return redirect(url_for('index'))
+
+@Models.app.route('/on')
+def turnOnSystem():
+    Loop.setup()
+    return redirect(url_for('index'))
+
 if __name__ == '__main__':
     Loop.setup()
     Models.app.secret_key = 'super secret key'

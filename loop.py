@@ -1,23 +1,36 @@
 #!/usr/bin/env python
-from flask import Flask, render_template, redirect, url_for, request
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 import time
-import schedule as Sched
+import schedule
 import models as Models
 import GPIOFuntions as Raspi
+import threading
+
+loopEndFlag = False
 
 def setup():
+    global loopEndFlag
+    loopEndFlag = True
     setupLamp()
     setupPump()
+    runThreaded(mainLoop)
+
+def turnOffSystem():
+    global loopEndFlag
+    loopEndFlag = True
+
+def runThreaded(job_func):
+    jobThread = threading.Thread(target=job_func)
+    jobThread.start()
 
 def setupLamp():
     currentPreset = Models.CurrentPlant.query.first()
     presetDetails = Models.PlantPreset.query.filter_by(id=currentPreset.plantPreset).first()
     startTime = presetDetails.lampFrom
     stopTime = presetDetails.lampTo
-    schedule.every().day.at(startTime).do(sheduleLamp)
-    schedule.every().day.at(stopTime).do(cancelSheduleLamp)
+    schedule.every().days.at(str(startTime)).do(sheduleLamp)
+    schedule.every().days.at(str(stopTime)).do(cancelSheduleLamp)
 
 def sheduleLamp():
     schedule.every(5).minutes.do(Raspi.ilumantion).tag('lamp')
@@ -32,16 +45,18 @@ def setupPump():
     presetDetails = Models.PlantPreset.query.filter_by(id=currentPreset.plantPreset).first()
     startTime = presetDetails.lampFrom
     stopTime = presetDetails.lampTo
-    schedule.every(presetDetails.wateringDays).day.at("15:00").do(shedulePump)
-    schedule.every(presetDetails.wateringDays).day.at("15:15").do(cancelShedulePump)
+    schedule.every(presetDetails.wateringDays).days.at("15:00").do(shedulePump)
+    schedule.every(presetDetails.wateringDays).days.at("15:15").do(cancelShedulePump)
 
 def shedulePump():
-    schedule.every(10).secounds.do(Raspi.watering).tag('pump')
+    schedule.every(1).minutes.do(Raspi.watering).tag('pump')
 
 def cancelShedulePump():
     Raspi.turnOffPin(Raspi.RaspiPin.OPump)
     schedule.clear('pump')
 
-while 1:
-    Sched.run_pending()
-    time.sleep(1)
+def mainLoop():
+    global loopEndFlag
+    while loopEndFlag == False:
+        schedule.run_pending()
+    loopEndFlag = False
