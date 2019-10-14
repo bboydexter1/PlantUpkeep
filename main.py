@@ -5,6 +5,12 @@ from datetime import datetime
 import models as Models
 import loop as Loop
 import GPIOFuntions as Raspi
+import signal
+import sys
+
+def signal_handler(sig, frame):
+        Loop.turnOffSystem()
+        sys.exit(0)
 
 @Models.app.route('/')
 def index():
@@ -65,5 +71,6 @@ def turnOnSystem():
 
 if __name__ == '__main__':
     Loop.setup()
+    signal.signal(signal.SIGINT, signal_handler)
     Models.app.secret_key = 'super secret key'
     Models.app.run(host='0.0.0.0', port= 8080 , debug = False)
