@@ -1,12 +1,10 @@
 #!/usr/bin/env python
 from flask import Flask, render_template, redirect, url_for, request, flash, session
 from flask_sqlalchemy import SQLAlchemy
-from datetime import datetime , time
+from datetime import datetime
 import models as Models
-import GPIOFuntions as Raspi
 import loop as Loop
-
-Raspi.setupPins()
+import time
 
 @Models.app.route('/')
 def index():
@@ -18,7 +16,6 @@ def index():
 
 @Models.app.route('/addPreset', methods=['GET', 'POST'])
 def addPreset():
-    Raspi.turnOffPin(8)
     humidityOptions = Models.Humidity.query.all()
     brightnessOptions = Models.Brightness.query.all()
     return render_template('addPreset.html' , wateringOptions = humidityOptions , lightOptions = brightnessOptions )
@@ -59,6 +56,7 @@ def changePlantSettingsHandler():
 @Models.app.route('/off')
 def turnOffSystem():
     Loop.turnOffSystem()
+    time.sleep(2)
     return redirect(url_for('index'))
 
 @Models.app.route('/on')
