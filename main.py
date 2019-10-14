@@ -4,7 +4,6 @@ from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 import models as Models
 import loop as Loop
-import time
 import GPIOFuntions as Raspi
 
 @Models.app.route('/')
@@ -57,7 +56,6 @@ def changePlantSettingsHandler():
 @Models.app.route('/off')
 def turnOffSystem():
     Loop.turnOffSystem()
-    time.sleep(2)
     return redirect(url_for('index'))
 
 @Models.app.route('/on')
@@ -68,4 +66,4 @@ def turnOnSystem():
 if __name__ == '__main__':
     Loop.setup()
     Models.app.secret_key = 'super secret key'
-    Models.app.run(host='0.0.0.0', port= 8080 , debug = True)
+    Models.app.run(host='0.0.0.0', port= 8080 , debug = False)
