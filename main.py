@@ -5,11 +5,12 @@ from datetime import datetime
 import models as Models
 import loop as Loop
 import time
+import GPIOFuntions as Raspi
 
 @Models.app.route('/')
 def index():
-    pumpState = Raspi.checkPin(8)
-    lampState = Raspi.checkPin(16)
+    pumpState = Raspi.checkPin(Raspi.RaspiPin.OPump.value)
+    lampState = Raspi.checkPin(Raspi.RaspiPin.ORightLamp.value)
     currentPreset = Models.CurrentPlant.query.first()
     presetDetails = Models.PlantPreset.query.filter_by(id=currentPreset.plantPreset).first()
     return render_template('index.html' , pumpStatus = pumpState , lastWatering=currentPreset.LastWatering , lampStatus=lampState , lastIrradiation = currentPreset.LastIrradiation, presetName = presetDetails.name)

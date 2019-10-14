@@ -30,8 +30,6 @@ class RaspiPin(Enum):
 def setupPins():
     GPIO.setmode(GPIO.BOARD)
     GPIO.setwarnings(False)
-    GPIO.setup(RaspiPin.OTestLamp.value, GPIO.OUT)
-    GPIO.output(RaspiPin.OTestLamp.value, False)
     GPIO.setup(RaspiPin.OLeftLamp.value, GPIO.OUT)
     GPIO.output(RaspiPin.OLeftLamp.value, False)
     GPIO.setup(RaspiPin.ORightLamp.value, GPIO.OUT)

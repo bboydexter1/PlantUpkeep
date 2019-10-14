@@ -15,8 +15,8 @@ def setup():
     Raspi.setupPins()
     setupLamp()
     setupPump()
-    schedule.every().minutes.do(turnOffSystem)
     runThreaded(mainLoop)
+    schedule.every().minutes.do(turnOffSystem)
 
 def turnOffSystem():
     global loopEndFlag
