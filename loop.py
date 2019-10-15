@@ -16,9 +16,9 @@ def setup():
     setupLamp()
     setupPump()
     runThreaded(mainLoop)
-    schedule.every().minutes.do(turnOffSystem)
 
 def turnOffSystem():
+    schedule.clear()
     global loopEndFlag
     loopEndFlag = True
 
@@ -42,27 +42,19 @@ def sheduleLamp():
 def cancelSheduleLamp():
     Raspi.turnOffPin(Raspi.RaspiPin.ORightLamp)
     Raspi.turnOffPin(Raspi.RaspiPin.OLeftLamp)
-    currentPreset = Models.CurrentPlant.query.first()
-    currentPreset.LastIrradiation = datetime.now()
-    Models.db.session.commit()
     schedule.clear('lamp')
 
 def setupPump():
     currentPreset = Models.CurrentPlant.query.first()
     presetDetails = Models.PlantPreset.query.filter_by(id=currentPreset.plantPreset).first()
-    startTime = presetDetails.lampFrom
-    stopTime = presetDetails.lampTo
     schedule.every(presetDetails.wateringDays).days.at("15:00").do(shedulePump)
-    schedule.every(presetDetails.wateringDays).days.at("15:10").do(cancelShedulePump)
+    schedule.every(presetDetails.wateringDays).days.at("15:15").do(cancelShedulePump)
 
 def shedulePump():
-    schedule.every(1).minutes.do(Raspi.watering).tag('pump')
+    schedule.every(10).seconds.do(Raspi.watering).tag('pump')
 
 def cancelShedulePump():
     Raspi.turnOffPin(Raspi.RaspiPin.OPump)
-    currentPreset = Models.CurrentPlant.query.first()
-    currentPreset.LastWatering = datetime.now()
-    Models.db.session.commit()
     schedule.clear('pump')
 
 def mainLoop():

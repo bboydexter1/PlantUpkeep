@@ -60,7 +60,9 @@ def watering():
     print("H lvl : " + str(getHumidityLevel()) + "/" + str(targetHumidity))
     if (getHumidityLevel() < targetHumidity):
         GPIO.output(RaspiPin.OPump.value, True)
-        print("watering")
+        currentPreset = Models.CurrentPlant.query.first()
+        currentPreset.LastWatering = datetime.now()
+        Models.db.session.commit()
         return True
     else :
         GPIO.output(RaspiPin.OPump.value, False)
@@ -75,7 +77,9 @@ def ilumantion():
     if (getLightLevel() < targetLightLevel):
         GPIO.output(RaspiPin.OLeftLamp.value, True)
         GPIO.output(RaspiPin.ORightLamp.value, True)
-        print("iluminating")
+        currentPreset = Models.CurrentPlant.query.first()
+        currentPreset.LastIrradiation = datetime.now()
+        Models.db.session.commit()
         return True
     else :
         GPIO.output(RaspiPin.OLeftLamp.value, False)
