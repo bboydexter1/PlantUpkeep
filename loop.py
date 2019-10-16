@@ -51,7 +51,7 @@ def setupPump():
     schedule.every(presetDetails.wateringDays).days.at("15:15").do(cancelShedulePump)
 
 def shedulePump():
-    schedule.every(10).seconds.do(Raspi.watering).tag('pump')
+    schedule.every(1).seconds.do(Raspi.watering).tag('pump')
 
 def cancelShedulePump():
     Raspi.turnOffPin(Raspi.RaspiPin.OPump)

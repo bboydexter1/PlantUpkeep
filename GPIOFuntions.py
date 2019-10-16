@@ -57,7 +57,6 @@ def watering():
     presetDetails = Models.PlantPreset.query.filter_by(id=currentPreset.plantPreset).first()
     humidityDetails = Models.Humidity.query.filter_by(id=presetDetails.humidityID).first()
     targetHumidity = humidityDetails.soilHumidity
-    print("H lvl : " + str(getHumidityLevel()) + "/" + str(targetHumidity))
     if (getHumidityLevel() < targetHumidity):
         GPIO.output(RaspiPin.OPump.value, True)
         currentPreset = Models.CurrentPlant.query.first()
@@ -73,7 +72,6 @@ def ilumantion():
     presetDetails = Models.PlantPreset.query.filter_by(id=currentPreset.plantPreset).first()
     iluminationDetails = Models.Brightness.query.filter_by(id=presetDetails.brightnessID).first()
     targetLightLevel = iluminationDetails.brightness
-    print("L lvl : " + str(getLightLevel()) + "/" + str(targetLightLevel))
     if (getLightLevel() < targetLightLevel):
         GPIO.output(RaspiPin.OLeftLamp.value, True)
         GPIO.output(RaspiPin.ORightLamp.value, True)
@@ -88,7 +86,17 @@ def ilumantion():
 
 def test():
     setupPins()
+    currentPreset = Models.CurrentPlant.query.first()
+    presetDetails = Models.PlantPreset.query.filter_by(id=currentPreset.plantPreset).first()
+    iluminationDetails = Models.Brightness.query.filter_by(id=presetDetails.brightnessID).first()
+    humidityDetails = Models.Humidity.query.filter_by(id=presetDetails.humidityID).first()
+    targetHumidity = humidityDetails.soilHumidity
+    targetLightLevel = iluminationDetails.brightness
     while 1 : 
+        print("soil humidity : " + str(int(getHumidityLevel())) + "/" +str(targetHumidity))
         watering()
+        print("light level : " + str(int(getLightLevel())) + "/" +str(targetLightLevel))
         ilumantion()
         time.sleep(4)
+
+test()

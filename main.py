@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 from flask import Flask, render_template, redirect, url_for, request, flash, session
 from flask_sqlalchemy import SQLAlchemy
-from datetime import datetime
+from datetime import datetime, time
 import models as Models
 import loop as Loop
 import GPIOFuntions as Raspi
