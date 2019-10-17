@@ -41,7 +41,7 @@ def checkPin(pin):
     return GPIO.input(pin)
 
 def turnOnPin(pin):
-    GPIO.output(pin, False)
+    GPIO.output(pin, True)
 
 def turnOffPin(pin):
     GPIO.output(pin, False)
@@ -99,4 +99,4 @@ def test():
         ilumantion()
         time.sleep(4)
 
-test()
+setupPins()
