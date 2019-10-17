@@ -2,27 +2,37 @@
 
 {%block body%}
 	<form  action="{{ url_for('addPresetDataHandle') }}" method="post">
-		<div>			
-			<a>nazwa : </a>
-			<input type="text" name="name">
-			<a>co ile dni nawadniać : </a>
-			<input type="text" name="daysCount">
+		<div>
+			<div>	
+				<p>nazwa : </p>
+				<input type="text" name="name">
+			</div>	
+			<div>	
+				<p>co ile dni nawadniać : </p>
+				<input type="text" name="daysCount">
+			</div>	
 		</div>
 		<div>
+			<p>stopień nawodnienia : </p>
+			<ul style="list-style-type: none;">
 			{% for option in wateringOptions %}
-			<input type="radio" class="radio" name="wateringType" value="{{option.id}}"> {{option.name}}	
+			<li><input type="radio" class="radio" name="wateringType" value="{{option.id}}"> {{option.name}}	</li>
 			{%endfor%}
+			</ul>
 		</div>
 
 		<div>
-			<a>godziny nasłoneczniania : </a>
+			<p>godziny nasłoneczniania : </p>
 			<a>od</a> <input type="time" name="from">
 			<a>do</a> <input type="time" name="to">
 		</div>
 		<div>
+			<p>siła nasłonecznienia : </p>
+			<ul style="list-style-type: none;">
 			{% for option in lightOptions %}
-			<input type="radio" class="radio" name="ilumnatingType" value="{{option.id}}"> {{option.name}}	
+			<li><input type="radio" class="radio" name="ilumnatingType" value="{{option.id}}"> {{option.name}}	</li>
 			{%endfor%}
+			</ul>
 		</div>
 		<div>
 			<button>zastosuj</button>

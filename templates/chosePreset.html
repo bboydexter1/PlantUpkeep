@@ -7,10 +7,9 @@
 		<div class="box">
 		<input type="radio" class="radio" name="preset" value="{{option.id}}"> {{option.name}}
 		<p>nasłonecznianie : od {{option.lampFrom}} do {{option.lampTo}} </p>
-		<p>siła nasłonecznienia : {{option.brightnessID}} </p>	
+		<p>siła nasłonecznienia : {{brightnessOptions[option.brightnessID-1].name}} </p>	
 		<p>nawadnianie co {{option.wateringDays}} dni </p>		
-		<p>stopień nawodnienia : {{option.humidityID}} </p>			
-		
+		<p>stopień nawodnienia : {{humidityOptions[option.humidityID-1].name}} </p>					
 		</div>
 		{%endfor%}	
 		<input type="submit" value="Zastosuj">

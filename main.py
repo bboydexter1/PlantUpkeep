@@ -14,11 +14,19 @@ def signal_handler(sig, frame):
 
 @Models.app.route('/')
 def index():
-    pumpState = Raspi.checkPin(Raspi.RaspiPin.OPump.value)
-    lampState = Raspi.checkPin(Raspi.RaspiPin.ORightLamp.value)
+    pumpStatus = Raspi.checkPin(Raspi.RaspiPin.OPump.value)
+    if (pumpStatus == 1):
+        pumpStatus = "On"
+    else:
+        pumpStatus = "Off"
+    lampStatus = Raspi.checkPin(Raspi.RaspiPin.ORightLamp.value)
+    if (lampStatus == 1):
+        lampStatus = "On"
+    else:
+        lampStatus = "Off"
     currentPreset = Models.CurrentPlant.query.first()
     presetDetails = Models.PlantPreset.query.filter_by(id=currentPreset.plantPreset).first()
-    return render_template('index.html' , pumpStatus = pumpState , lastWatering=currentPreset.LastWatering , lampStatus=lampState , lastIrradiation = currentPreset.LastIrradiation, presetName = presetDetails.name)
+    return render_template('index.html' , pumpStatus = pumpStatus , lastWatering=currentPreset.LastWatering , lampStatus=lampStatus , lastIrradiation = currentPreset.LastIrradiation, presetName = presetDetails.name)
 
 @Models.app.route('/addPreset', methods=['GET', 'POST'])
 def addPreset():
@@ -47,7 +55,9 @@ def addPresetDataHandle():
 @Models.app.route('/changePlantSettings')
 def changePlantSettings():
     plantSettings = Models.PlantPreset.query.all()
-    return render_template('chosePreset.html' , options = plantSettings )
+    brightnessOptions = Models.Brightness.query.all()
+    humidityOptions = Models.Humidity.query.all()
+    return render_template('chosePreset.html' , options = plantSettings, brightnessOptions = brightnessOptions, humidityOptions = humidityOptions )
 
 @Models.app.route('/changePlantSettingsHandler', methods=['GET', 'POST'])
 def changePlantSettingsHandler():
@@ -67,6 +77,24 @@ def turnOffSystem():
 @Models.app.route('/on')
 def turnOnSystem():
     Loop.setup()
+    return redirect(url_for('index'))
+
+@Models.app.route('/lamp/<state>')
+def changeLampState(state):
+    if (state == "on"):
+        Raspi.turnOnPin(Raspi.RaspiPin.OLeftLamp.value)
+        Raspi.turnOnPin(Raspi.RaspiPin.ORightLamp.value)
+    elif  (state == "off") :
+        Raspi.turnOffPin(Raspi.RaspiPin.OLeftLamp.value)
+        Raspi.turnOffPin(Raspi.RaspiPin.ORightLamp.value)
+    return redirect(url_for('index'))
+
+@Models.app.route('/pump/<state>')
+def changePumpState(state):
+    if (state == "on"):
+        Raspi.turnOnPin(Raspi.RaspiPin.OPump.value)
+    elif  (state == "off") :
+        Raspi.turnOffPin(Raspi.RaspiPin.OPump.value)
     return redirect(url_for('index'))
 
 if __name__ == '__main__':
