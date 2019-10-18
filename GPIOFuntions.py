@@ -31,11 +31,11 @@ def setupPins():
     GPIO.setmode(GPIO.BOARD)
     GPIO.setwarnings(False)
     GPIO.setup(RaspiPin.OLeftLamp.value, GPIO.OUT)
-    GPIO.output(RaspiPin.OLeftLamp.value, False)
+    GPIO.output(RaspiPin.OLeftLamp.value, True)
     GPIO.setup(RaspiPin.ORightLamp.value, GPIO.OUT)
-    GPIO.output(RaspiPin.ORightLamp.value, False)
+    GPIO.output(RaspiPin.ORightLamp.value, True)
     GPIO.setup(RaspiPin.OPump.value, GPIO.OUT)
-    GPIO.output(RaspiPin.OPump.value, False)
+    GPIO.output(RaspiPin.OPump.value, True)
 
 def checkPin(pin):
     return GPIO.input(pin)
@@ -45,6 +45,20 @@ def turnOnPin(pin):
 
 def turnOffPin(pin):
     GPIO.output(pin, False)
+
+def turnOnLamps():
+    turnOffPin(RaspiPin.OLeftLamp.value)
+    turnOffPin(RaspiPin.ORightLamp.value)
+
+def turnOnPump():
+    turnOffPin(RaspiPin.OPump.value)
+
+def turnOffLamps():
+    turnOnPin(RaspiPin.OLeftLamp.value)
+    turnOnPin(RaspiPin.ORightLamp.value)
+
+def turnOffPump():
+    turnOnPin(RaspiPin.OPump.value)
 
 def getHumidityLevel():
     return mcp.read_adc(2)
@@ -58,13 +72,13 @@ def watering():
     humidityDetails = Models.Humidity.query.filter_by(id=presetDetails.humidityID).first()
     targetHumidity = humidityDetails.soilHumidity
     if (getHumidityLevel() < targetHumidity):
-        GPIO.output(RaspiPin.OPump.value, True)
+        turnOnPump()
         currentPreset = Models.CurrentPlant.query.first()
         currentPreset.LastWatering = datetime.now()
         Models.db.session.commit()
         return True
     else :
-        GPIO.output(RaspiPin.OPump.value, False)
+        turnOffPump()
         return False
 
 def ilumantion():
@@ -73,15 +87,13 @@ def ilumantion():
     iluminationDetails = Models.Brightness.query.filter_by(id=presetDetails.brightnessID).first()
     targetLightLevel = iluminationDetails.brightness
     if (getLightLevel() < targetLightLevel):
-        GPIO.output(RaspiPin.OLeftLamp.value, True)
-        GPIO.output(RaspiPin.ORightLamp.value, True)
+        turnOnLamps()
         currentPreset = Models.CurrentPlant.query.first()
         currentPreset.LastIrradiation = datetime.now()
         Models.db.session.commit()
         return True
     else :
-        GPIO.output(RaspiPin.OLeftLamp.value, False)
-        GPIO.output(RaspiPin.ORightLamp.value, False)
+        turnOffLamps()
         return False
 
 def test():

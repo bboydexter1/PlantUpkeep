@@ -40,8 +40,7 @@ def sheduleLamp():
     schedule.every(5).minutes.do(Raspi.ilumantion).tag('lamp')
 
 def cancelSheduleLamp():
-    Raspi.turnOffPin(Raspi.RaspiPin.ORightLamp)
-    Raspi.turnOffPin(Raspi.RaspiPin.OLeftLamp)
+    Raspi.turnOffLamps()
     schedule.clear('lamp')
 
 def setupPump():
@@ -54,7 +53,7 @@ def shedulePump():
     schedule.every(1).seconds.do(Raspi.watering).tag('pump')
 
 def cancelShedulePump():
-    Raspi.turnOffPin(Raspi.RaspiPin.OPump)
+    Raspi.turnOffPump()
     schedule.clear('pump')
 
 def mainLoop():

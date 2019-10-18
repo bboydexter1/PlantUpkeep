@@ -14,16 +14,18 @@ def signal_handler(sig, frame):
 
 @Models.app.route('/')
 def index():
+    brightnessOptions = Models.Brightness.query.all()
+    humidityOptions = Models.Humidity.query.all()
     pumpStatus = Raspi.checkPin(Raspi.RaspiPin.OPump.value)
     if (pumpStatus == 1):
-        pumpStatus = "On"
-    else:
         pumpStatus = "Off"
+    else:
+        pumpStatus = "On"
     lampStatus = Raspi.checkPin(Raspi.RaspiPin.ORightLamp.value)
     if (lampStatus == 1):
-        lampStatus = "On"
-    else:
         lampStatus = "Off"
+    else:
+        lampStatus = "On"
     currentPreset = Models.CurrentPlant.query.first()
     presetDetails = Models.PlantPreset.query.filter_by(id=currentPreset.plantPreset).first()
     return render_template('index.html' , pumpStatus = pumpStatus , lastWatering=currentPreset.LastWatering , lampStatus=lampStatus , lastIrradiation = currentPreset.LastIrradiation, presetName = presetDetails.name)
@@ -82,19 +84,17 @@ def turnOnSystem():
 @Models.app.route('/lamp/<state>')
 def changeLampState(state):
     if (state == "on"):
-        Raspi.turnOnPin(Raspi.RaspiPin.OLeftLamp.value)
-        Raspi.turnOnPin(Raspi.RaspiPin.ORightLamp.value)
+        Raspi.turnOnLamps()
     elif  (state == "off") :
-        Raspi.turnOffPin(Raspi.RaspiPin.OLeftLamp.value)
-        Raspi.turnOffPin(Raspi.RaspiPin.ORightLamp.value)
+        Raspi.turnOffLamps()
     return redirect(url_for('index'))
 
 @Models.app.route('/pump/<state>')
 def changePumpState(state):
     if (state == "on"):
-        Raspi.turnOnPin(Raspi.RaspiPin.OPump.value)
+        Raspi.turnOnPump()
     elif  (state == "off") :
-        Raspi.turnOffPin(Raspi.RaspiPin.OPump.value)
+        Raspi.turnOffPump()
     return redirect(url_for('index'))
 
 if __name__ == '__main__':
