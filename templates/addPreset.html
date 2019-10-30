@@ -4,16 +4,16 @@
 	<form  action="{{ url_for('addPresetDataHandle') }}" method="post">
 		<div>
 			<div>	
-				<p>nazwa : </p>
+				<p>name : </p>
 				<input type="text" name="name">
 			</div>	
 			<div>	
-				<p>co ile dni nawadniać : </p>
-				<input type="text" name="daysCount">
+				<p>water plant every : </p>
+				<input type="text" name="daysCount"> days
 			</div>	
 		</div>
 		<div>
-			<p>stopień nawodnienia : </p>
+			<p>humidity level : </p>
 			<ul style="list-style-type: none;">
 			{% for option in wateringOptions %}
 			<li><input type="radio" class="radio" name="wateringType" value="{{option.id}}"> {{option.name}}	</li>
@@ -22,12 +22,12 @@
 		</div>
 
 		<div>
-			<p>godziny nasłoneczniania : </p>
+			<p>Time when plant should have aces access to sunlight : </p>
 			<a>od</a> <input type="time" name="from">
 			<a>do</a> <input type="time" name="to">
 		</div>
 		<div>
-			<p>siła nasłonecznienia : </p>
+			<p>light intensity level : </p>
 			<ul style="list-style-type: none;">
 			{% for option in lightOptions %}
 			<li><input type="radio" class="radio" name="ilumnatingType" value="{{option.id}}"> {{option.name}}	</li>
@@ -35,7 +35,7 @@
 			</ul>
 		</div>
 		<div>
-			<button>zastosuj</button>
+			<button>Submit</button>
 		</div>
 	</form>
 	

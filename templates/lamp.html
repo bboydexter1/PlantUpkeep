@@ -3,9 +3,9 @@
 {%block body%}
 	<form>
 		<div>
-			<a>godziny nasłoneczniania : </a>
-			<a>od</a> <input type="text" name="from">
-			<a>do</a> <input type="text" name="to">
+			<a>sunlight: </a>
+			<a>from</a> <input type="text" name="from">
+			<a>to</a> <input type="text" name="to">
 		</div>
 		<div>
 			{% for option in options %}
@@ -13,7 +13,7 @@
 			{%endfor%}
 		</div>
 		<div>
-			<button>zastosuj</button>
+			<button>Submit</button>
 		</div>
 	</form>
 {% endblock %}

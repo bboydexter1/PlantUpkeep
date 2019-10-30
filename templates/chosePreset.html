@@ -6,13 +6,13 @@
 		{% for option in options %}
 		<div class="box">
 		<input type="radio" class="radio" name="preset" value="{{option.id}}"> {{option.name}}
-		<p>nasłonecznianie : od {{option.lampFrom}} do {{option.lampTo}} </p>
-		<p>siła nasłonecznienia : {{brightnessOptions[option.brightnessID-1].name}} </p>	
-		<p>nawadnianie co {{option.wateringDays}} dni </p>		
-		<p>stopień nawodnienia : {{humidityOptions[option.humidityID-1].name}} </p>					
+		<p>sunlight : from {{option.lampFrom}} to {{option.lampTo}} </p>
+		<p>light level : {{brightnessOptions[option.brightnessID-1].name}} </p>	
+		<p>water every {{option.wateringDays}} days </p>		
+		<p>humidity level : {{humidityOptions[option.humidityID-1].name}} </p>					
 		</div>
 		{%endfor%}	
-		<input type="submit" value="Zastosuj">
+		<input type="submit" value="Submit">
 	</form>
 
 {% endblock %}

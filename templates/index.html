@@ -3,21 +3,21 @@
 {%block body%}
 <div id="main">
 	<div>
-		<h2 >pompa : {{pumpStatus}}</h2>
+		<h2 >pump : {{pumpStatus}}</h2>
 		<div>	
 			<a href="/pump/on" class="btn btn-info" role="button">on</a>
 			<a href="/pump/off" class="btn btn-info" role="button">off</a>
 		</div>
-		<div ><a>ostatnie podlanie :	{{lastWatering}}</a></div>
+		<div ><a>last pump activity :	{{lastWatering}}</a></div>
 	</div>
 	<div>
-		<h2 >lampa :  {{lampStatus}}</h2>
+		<h2 >lamp :  {{lampStatus}}</h2>
 		<div>		
 			<a href="lamp/on" class="btn btn-info" role="button">on</a>
 			<a href="lamp/off" class="btn btn-info" role="button">off</a>
 		</div>
-		<div ><a>ostatnie nasłonecznianie :	{{lastIrradiation}}</a>	</div>
+		<div ><a>last lamp activity :	{{lastIrradiation}}</a>	</div>
 	</div>	
-	<p>aktualne ustawienie : {{presetName}}</p>
+	<p>current preset : {{presetName}}</p>
 </div>
 {% endblock %}
