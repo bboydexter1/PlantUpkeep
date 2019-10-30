@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-from flask import Flask, render_template, redirect, url_for, request
+from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime , time
 
