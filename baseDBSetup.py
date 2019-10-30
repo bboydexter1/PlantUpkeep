@@ -1,12 +1,6 @@
 #!/usr/bin/env python
-from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
+from datetime import datetime, time
 import models as Models
-app = Flask(__name__)
-
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
-
-db = SQLAlchemy(app)
 
 brightness1 = Models.Brightness(name = "low" , brightness = 250)
 brightness2 = Models.Brightness(name = "medium" , brightness = 450)
@@ -16,7 +10,7 @@ humidity1 = Models.Humidity(name = "low" , soilHumidity = 200)
 humidity2 = Models.Humidity(name = "medium" , soilHumidity = 500)
 humidity3 = Models.Humidity(name = "high" , soilHumidity = 1000)
 
-plantPreset = Models.PlantPreset(name = "example plant preset for Basil", wateringDays = 3 , brightnessID = 3,  humidityID = 2)
+plantPreset = Models.PlantPreset(name = "example plant preset for Basil", lampFrom = time(hour=8, minute = 0) , lampTo = time(hour=19, minute = 0), wateringDays = 3 , brightnessID = 3,  humidityID = 2)
 
 currentplant = Models.CurrentPlant(plantPreset = 1)
 

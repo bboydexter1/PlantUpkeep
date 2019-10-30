@@ -33,6 +33,9 @@ def setupLamp():
     presetDetails = Models.PlantPreset.query.filter_by(id=currentPreset.plantPreset).first()
     startTime = presetDetails.lampFrom
     stopTime = presetDetails.lampTo
+    currentTime = datetime.now().time()
+    if (currentTime > startTime and currentTime < stopTime ) :
+        sheduleLamp()
     schedule.every().days.at(str(startTime)).do(sheduleLamp)
     schedule.every().days.at(str(stopTime)).do(cancelSheduleLamp)
 
