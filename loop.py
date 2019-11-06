@@ -34,7 +34,7 @@ def setupLamp():
     startTime = presetDetails.lampFrom
     stopTime = presetDetails.lampTo
     currentTime = datetime.now().time()
-    if (currentTime > startTime and currentTime < stopTime ) :
+    if (currentTime > startTime and currentTime < stopTime) :
         sheduleLamp()
     schedule.every().days.at(str(startTime)).do(sheduleLamp)
     schedule.every().days.at(str(stopTime)).do(cancelSheduleLamp)
@@ -49,11 +49,26 @@ def cancelSheduleLamp():
 def setupPump():
     currentPreset = Models.CurrentPlant.query.first()
     presetDetails = Models.PlantPreset.query.filter_by(id=currentPreset.plantPreset).first()
+    lastWatering = datetime.now() - currentPreset.LastWatering
+    daysSinceLastWatering = lastWatering.days
+    if (daysSinceLastWatering >= presetDetails.wateringDays) :
+        schedule.every().days.at("15:00").do(firstWatering)
+        schedule.every().days.at("15:15").do(cancelShedulePump)
+    else : 
+        waterAfter = presetDetails.wateringDays - daysSinceLastWatering
+        schedule.every(waterAfter).days.at("15:00").do(firstWatering)
+        schedule.every(waterAfter).days.at("15:15").do(cancelShedulePump)
+
+def firstWatering():
+    shedulePump()
+    currentPreset = Models.CurrentPlant.query.first()
+    presetDetails = Models.PlantPreset.query.filter_by(id=currentPreset.plantPreset).first()
     schedule.every(presetDetails.wateringDays).days.at("15:00").do(shedulePump)
     schedule.every(presetDetails.wateringDays).days.at("15:15").do(cancelShedulePump)
+    return schedule.CancelJob
 
 def shedulePump():
-    schedule.every(1).seconds.do(Raspi.watering).tag('pump')
+    schedule.every(3).seconds.do(Raspi.watering).tag('pump')
 
 def cancelShedulePump():
     Raspi.turnOffPump()

@@ -49,9 +49,15 @@ def turnOffPin(pin):
 def turnOnLamps():
     turnOffPin(RaspiPin.OLeftLamp.value)
     turnOffPin(RaspiPin.ORightLamp.value)
+    currentPreset = Models.CurrentPlant.query.first()
+    currentPreset.LastIrradiation = datetime.now()
+    Models.db.session.commit()
 
 def turnOnPump():
     turnOffPin(RaspiPin.OPump.value)
+    currentPreset = Models.CurrentPlant.query.first()
+    currentPreset.LastWatering = datetime.now()
+    Models.db.session.commit()
 
 def turnOffLamps():
     turnOnPin(RaspiPin.OLeftLamp.value)
@@ -73,9 +79,6 @@ def watering():
     targetHumidity = humidityDetails.soilHumidity
     if (getHumidityLevel() < targetHumidity):
         turnOnPump()
-        currentPreset = Models.CurrentPlant.query.first()
-        currentPreset.LastWatering = datetime.now()
-        Models.db.session.commit()
         return True
     else :
         turnOffPump()
@@ -88,9 +91,6 @@ def ilumantion():
     targetLightLevel = iluminationDetails.brightness
     if (getLightLevel() < targetLightLevel):
         turnOnLamps()
-        currentPreset = Models.CurrentPlant.query.first()
-        currentPreset.LastIrradiation = datetime.now()
-        Models.db.session.commit()
         return True
     else :
         turnOffLamps()

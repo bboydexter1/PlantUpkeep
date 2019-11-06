@@ -64,9 +64,11 @@ def changePlantSettings():
 @Models.app.route('/changePlantSettingsHandler', methods=['GET', 'POST'])
 def changePlantSettingsHandler():
     if request.method == 'POST':
+        Loop.turnOffSystem()
         plant = Models.CurrentPlant.query.first()
         plant.plantPreset = request.form['preset']
         Models.db.session.commit()
+        Loop.setup()
         return redirect(url_for('index'))
     else:
         return redirect(url_for('changePlantSettings'))
