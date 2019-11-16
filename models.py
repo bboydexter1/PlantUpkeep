@@ -12,8 +12,8 @@ db = SQLAlchemy(app)
 class CurrentPlant(db.Model):
     __tablename__ = 'currentPlant'
     id = db.Column(db.Integer, primary_key=True)
-    LastWatering = db.Column(db.DateTime, nullable=True)
-    LastIrradiation = db.Column(db.DateTime, nullable=True)
+    LastWatering = db.Column(db.DateTime, nullable=False)
+    LastIrradiation = db.Column(db.DateTime, nullable=False)
     plantPreset = db.Column(db.Integer, db.ForeignKey('plantPreset.id'), nullable=False)
     
 class PlantPreset(db.Model):
