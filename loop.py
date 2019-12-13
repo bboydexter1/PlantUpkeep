@@ -52,8 +52,8 @@ def setupPump():
     lastWatering = datetime.now() - currentPreset.LastWatering
     daysSinceLastWatering = lastWatering.days
     if (daysSinceLastWatering >= presetDetails.wateringDays) :
-        schedule.every().days.at("15:00").do(firstWatering)
-        schedule.every().days.at("15:15").do(cancelShedulePump)
+        schedule.every().days.at("20:00").do(firstWatering)
+        schedule.every().days.at("20:15").do(cancelShedulePump)
     else : 
         waterAfter = presetDetails.wateringDays - daysSinceLastWatering
         schedule.every(waterAfter).days.at("15:00").do(firstWatering)

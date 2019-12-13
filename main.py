@@ -7,6 +7,7 @@ import loop as Loop
 import GPIOFuntions as Raspi
 import signal
 import sys
+import json
 
 def signal_handler(sig, frame):
         Loop.turnOffSystem()
@@ -30,13 +31,29 @@ def index():
     presetDetails = Models.PlantPreset.query.filter_by(id=currentPreset.plantPreset).first()
     return render_template('index.html' , pumpStatus = pumpStatus , lastWatering=currentPreset.LastWatering , lampStatus=lampStatus , lastIrradiation = currentPreset.LastIrradiation, presetName = presetDetails.name)
 
-@Models.app.route('/addPreset', methods=['GET', 'POST']) # remove post get
+@Models.app.route('/addPreset') 
 def addPreset():
     humidityOptions = Models.Humidity.query.all()
     brightnessOptions = Models.Brightness.query.all()
     return render_template('addPreset.html' , wateringOptions = humidityOptions , lightOptions = brightnessOptions )
 
-@Models.app.route('/addPresetDataHandle', methods=['GET', 'POST'])
+@Models.app.route('/iluminationtypes') 
+def getIlumitationTypes():
+    brightnessOptions = Models.Brightness.query.all()
+    jsonFormat = []
+    for type in brightnessOptions :
+        jsonFormat.append([type.name , type.brightness])
+    return json.dumps(jsonFormat)
+
+@Models.app.route('/wateringtypes') 
+def getWateringTypes():
+    humidityOptions = Models.Humidity.query.all()
+    jsonFormat = []
+    for type in humidityOptions :
+        jsonFormat.append([type.name , type.soilHumidity])
+    return json.dumps(jsonFormat)
+
+@Models.app.route('/addPresetDataHandle', methods=['POST'])
 def addPresetDataHandle():
     if request.method == 'POST':
         name = request.form['name']
@@ -45,7 +62,7 @@ def addPresetDataHandle():
         lampFrom = time(hour=int(lampFrom[0]), minute = int(lampFrom[1]))
         lampTo = time(hour=int(lampTo[0]), minute = int(lampTo[1]))
         wateringDays = request.form['daysCount']
-        brightnessID = request.form['ilumnatingType']
+        brightnessID = request.form['iluminationType']
         humidityID = request.form['wateringType']
         newPlant = Models.PlantPreset(name = name,lampFrom = lampFrom , lampTo = lampTo , wateringDays = wateringDays , brightnessID = brightnessID , humidityID = humidityID)
         Models.db.session.add(newPlant)
@@ -61,7 +78,19 @@ def changePlantSettings():
     humidityOptions = Models.Humidity.query.all()
     return render_template('chosePreset.html' , options = plantSettings, brightnessOptions = brightnessOptions, humidityOptions = humidityOptions )
 
-@Models.app.route('/changePlantSettingsHandler', methods=['GET', 'POST'])
+@Models.app.route('/getplantsettings')
+def getplantsettings():
+    plantSettings = Models.PlantPreset.query.all()
+    brightnessOptions = Models.Brightness.query.all()
+    humidityOptions = Models.Humidity.query.all()
+    jsonFormat = ["name" , "lampFrom" , "lampTo" , "wateringDays" , "brightnessName" , "brightnessPower" , "humidityName" , "humidityPower"]
+    for type in plantSettings :
+        brightness = brightnessOptions[type.brightnessID]
+        humidity = humidityOptions[type.humidityID]
+        jsonFormat.append([type.name , type.lampFrom , type.lampTo , type.wateringDays , brightness.name , brightness.brightness , humidity.name , humidity.soilHumidity])
+    return json.dumps(jsonFormat)
+
+@Models.app.route('/changePlantSettingsHandler', methods=['POST'])
 def changePlantSettingsHandler():
     if request.method == 'POST':
         Loop.turnOffSystem()
@@ -73,31 +102,43 @@ def changePlantSettingsHandler():
     else:
         return redirect(url_for('changePlantSettings'))
 
-@Models.app.route('/off')
+@Models.app.route('/off', methods=['GET', 'PUT'])
 def turnOffSystem():
     Loop.turnOffSystem()
-    return redirect(url_for('index'))
+    if request.method == 'GET':
+        return redirect(url_for('index'))
+    else : 
+        return "system is off"
 
-@Models.app.route('/on')
+@Models.app.route('/on', methods=['GET' , 'PUT'])
 def turnOnSystem():
     Loop.setup()
-    return redirect(url_for('index'))
+    if request.method == 'GET':
+        return redirect(url_for('index'))
+    else : 
+        return "system is on"
 
-@Models.app.route('/lamp/<state>')
+@Models.app.route('/lamp/<state>' , methods=['GET' , 'PUT'])
 def changeLampState(state):
     if (state == "on"):
         Raspi.turnOnLamps()
     elif  (state == "off") :
         Raspi.turnOffLamps()
-    return redirect(url_for('index'))
+    if request.method == 'GET':
+        return redirect(url_for('index'))
+    else : 
+        return "lamp is "+state
 
-@Models.app.route('/pump/<state>')
+@Models.app.route('/pump/<state>' , methods=['GET' , 'PUT'])
 def changePumpState(state):
     if (state == "on"):
         Raspi.turnOnPump()
     elif  (state == "off") :
         Raspi.turnOffPump()
-    return redirect(url_for('index'))
+    if request.method == 'GET':
+        return redirect(url_for('index'))
+    else : 
+        return "pump is "+state
 
 if __name__ == '__main__':
     Loop.setup()

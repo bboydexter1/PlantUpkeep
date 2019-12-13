@@ -4,9 +4,9 @@ import models as Models
 
 Models.db.create_all()
 
-brightness1 = Models.Brightness(name = "low" , brightness = 250)
-brightness2 = Models.Brightness(name = "medium" , brightness = 450)
-brightness3 = Models.Brightness(name = "high" , brightness = 650)
+brightness1 = Models.Brightness(name = "low" , brightness = 200)
+brightness2 = Models.Brightness(name = "medium" , brightness = 300)
+brightness3 = Models.Brightness(name = "high" , brightness = 450)
 
 humidity1 = Models.Humidity(name = "low" , soilHumidity = 150)
 humidity2 = Models.Humidity(name = "medium" , soilHumidity = 250)
