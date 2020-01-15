@@ -68,7 +68,7 @@ def firstWatering():
     return schedule.CancelJob
 
 def shedulePump():
-    schedule.every(3).seconds.do(Raspi.watering).tag('pump')
+    schedule.every(1).seconds.do(Raspi.watering).tag('pump')
 
 def cancelShedulePump():
     Raspi.turnOffPump()

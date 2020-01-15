@@ -29,7 +29,7 @@ def index():
         lampStatus = "On"
     currentPreset = Models.CurrentPlant.query.first()
     presetDetails = Models.PlantPreset.query.filter_by(id=currentPreset.plantPreset).first()
-    return render_template('index.html' , pumpStatus = pumpStatus , lastWatering=currentPreset.LastWatering , lampStatus=lampStatus , lastIrradiation = currentPreset.LastIrradiation, presetName = presetDetails.name)
+    return render_template('index.html' , pumpStatus = pumpStatus , lastWatering=currentPreset.LastWatering , lampStatus=lampStatus , lastIrradiation = currentPreset.LastIrradiation, presetName = presetDetails.name , currentHumidty = Raspi.getCurrentHumidityText() , currentIlumination = Raspi.getCurrentIluminationText())
 
 @Models.app.route('/addPreset') 
 def addPreset():

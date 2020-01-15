@@ -96,18 +96,26 @@ def ilumantion():
         turnOffLamps()
         return False
 
-def test():
-    setupPins()
+def getCurrentHumidityText():
+    currentPreset = Models.CurrentPlant.query.first()
+    presetDetails = Models.PlantPreset.query.filter_by(id=currentPreset.plantPreset).first()
+    humidityDetails = Models.Humidity.query.filter_by(id=presetDetails.humidityID).first()
+    targetHumidity = humidityDetails.soilHumidity
+    return str(int(getHumidityLevel())) + "/" +str(targetHumidity)
+
+def getCurrentIluminationText():
     currentPreset = Models.CurrentPlant.query.first()
     presetDetails = Models.PlantPreset.query.filter_by(id=currentPreset.plantPreset).first()
     iluminationDetails = Models.Brightness.query.filter_by(id=presetDetails.brightnessID).first()
-    humidityDetails = Models.Humidity.query.filter_by(id=presetDetails.humidityID).first()
-    targetHumidity = humidityDetails.soilHumidity
     targetLightLevel = iluminationDetails.brightness
+    return str(int(getLightLevel())) + "/" +str(targetLightLevel)
+
+def test():
+    setupPins()
     while 1 : 
-        print("soil humidity : " + str(int(getHumidityLevel())) + "/" +str(targetHumidity))
+        print("soil humidity : " + getCurrentHumidityText())
         watering()
-        print("light level : " + str(int(getLightLevel())) + "/" +str(targetLightLevel))
+        print("light level : " + getCurrentIluminationText())
         ilumantion()
         time.sleep(4)
 
